@@ -15,22 +15,17 @@ class Ticket(commands.Cog):
   @commands.command()
   @commands.has_any_role('DIRETOR', 'SERVIDOR | DISCORD MASTER')
   async def startticket(self, ctx):
-    embed = discord.Embed(title = 'Ticket Okabam Roleplay', description = 'Selecione:\n\n🆘 - Suporte\n\n⚠️ - Denúncia\n\n💰 - Vendas', color = ctx.author.color)
+    embed = discord.Embed(title = 'Ticket Okabam Roleplay', description = 'Selecione:\n\n🆘 - Suporte\n\n⚠️ - Denúncia\n', color = ctx.author.color)
     embed.set_thumbnail(url='https://i.imgur.com/ZnjxFKI.png')  
     embed.add_field(name = 'ㅤ', value = 'Esperamos ajudar!')
     embed.set_footer(text = '🦅 | Okabam Roleplay')
     my_msg = await ctx.send(embed = embed)
     await my_msg.add_reaction("🆘")
-    await my_msg.add_reaction("⚠️")     
+    await my_msg.add_reaction("⚠️")      
     await ctx.channel.fetch_message(my_msg.id)  
 
   @commands.command()
-  async def add(self, ctx, msg_ticket):
-    def check_channel_ticket(message):
-      msg = str((message.author.name).partition('#')[0]).lower()
-      channel = discord.utils.get(ctx.guild.channels, name=f'🎫│𝚃𝚒𝚌𝚔𝚎𝚝-{msg}')            
-      return message.channel == channel
-    
+  async def adc(self, ctx, msg_ticket):
     msg = str((ctx.author.name).partition('#')[0]).lower()
     channel = discord.utils.get(ctx.guild.channels, name=f'🎫│𝚃𝚒𝚌𝚔𝚎𝚝-{msg}')
     if channel == ctx.channel:
@@ -47,11 +42,6 @@ class Ticket(commands.Cog):
 
   @commands.command()
   async def rem(self, ctx, msg_ticket):
-    def check_channel_ticket(message):
-      msg = str((message.author.name).partition('#')[0]).lower()
-      channel = discord.utils.get(ctx.guild.channels, name=f'🎫│𝚃𝚒𝚌𝚔𝚎𝚝-{msg}')            
-      return message.channel == channel
-    
     msg = str((ctx.author.name).partition('#')[0]).lower()
     channel = discord.utils.get(ctx.guild.channels, name=f'🎫│𝚃𝚒𝚌𝚔𝚎𝚝-{msg}')
     if channel == ctx.channel:
@@ -64,7 +54,17 @@ class Ticket(commands.Cog):
       await ctx.channel.set_permissions(member_add, read_messages=False)
       embed_id = discord.Embed(description = f'{member_add.nick} removido com sucesso', color = discord.Color.orange())
       embed_id.set_footer(text = '🦅 | Okabam Roleplay')
-      await ctx.send(embed = embed_id)   
+      await ctx.send(embed = embed_id)  
+  
+  @commands.command()
+  async def fechar(self, ctx):
+    msg = await ctx.channel.history(oldest_first=True, limit=1).flatten()
+    for message in msg:
+      msg = (str(self.client.get_user(int(message.content[2:-1]))).partition('#')[0]).lower()
+      break
+    channel = discord.utils.get(ctx.guild.channels, name=f'🎫│𝚃𝚒𝚌𝚔𝚎𝚝-{msg}')
+    if channel == ctx.channel:
+      await channel.delete()
 
 def setup(client):
   client.add_cog(Ticket(client))
