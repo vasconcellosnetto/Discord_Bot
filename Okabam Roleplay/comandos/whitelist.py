@@ -27,7 +27,6 @@ class Whitelist(commands.Cog):
 
   @commands.command()
   @commands.has_role('🛂 | Passageiro')
-  @commands.cooldown(1, 600, commands.BucketType.user)
   async def whitelist(self, ctx):
     await ctx.channel.purge(limit = 1)
     await self.begin_whitelist(ctx, await self.make_channel(ctx))
